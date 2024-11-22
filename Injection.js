@@ -195,4 +195,42 @@
         }
     });
 
+    // Logic to inject and remove the external Keystrokes script
+    const keystrokesModule = modules.find(module => module.name === 'Keystrokes');
+    let injectedScript = null;
+
+    function loadKeystrokesScript() {
+        if (!injectedScript) {
+            // Inject the script dynamically when the module is enabled
+            injectedScript = document.createElement('script');
+            injectedScript.src = 'https://github.com/wytlines100/unverified-keystokes/raw/main/Injection.js';
+            injectedScript.type = 'text/javascript';
+            document.body.appendChild(injectedScript);
+            console.log('Keystrokes script loaded');
+        }
+    }
+
+    function unloadKeystrokesScript() {
+        if (injectedScript) {
+            // Remove the dynamically injected script
+            document.body.removeChild(injectedScript);
+            injectedScript = null;
+            console.log('Keystrokes script unloaded');
+        }
+    }
+
+    // Listen for the module toggle change and load/unload the script accordingly
+    modules.forEach(module => {
+        if (module.name === 'Keystrokes') {
+            const checkbox = document.querySelector(`.module[data-name="${module.name}"] input`);
+            checkbox.addEventListener('change', () => {
+                if (module.active) {
+                    loadKeystrokesScript(); // Activate Keystrokes module
+                } else {
+                    unloadKeystrokesScript(); // Deactivate Keystrokes module
+                }
+            });
+        }
+    });
+
 })();
